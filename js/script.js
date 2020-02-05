@@ -13,8 +13,7 @@ function createImg(array) {
           alt=${img.description}
           data-src=${img.original}>
         </a></li>`, "")
-    });
-    return gallery.insertAdjacentHTML('beforeend', li);
+    return gallery.insertAdjacentHTML('beforeend', image);
 }
 
 createImg(galleryItems);
