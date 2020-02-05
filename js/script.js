@@ -6,20 +6,16 @@ const lightbox = document.querySelector('.js-lightbox');
 const lightboxImg = document.querySelector('.lightbox__image');
 
 function createImg(array) {
+    let li;
     const image = array.map(img => {
-        const li = document.createElement("li.gallery__item");
-        li.insertAdjacentHTML(
-            "beforeend",
-            `<a class="gallery__link" href=#>
+        li = array.reduce((acc, img) => acc + `<li class="gallery__item"><a class="gallery__link" href=#>
         <img class="gallery__image" 
           src=${img.preview}
           alt=${img.description}
           data-src=${img.original}>
-        </a>`
-        );
-        return li;
+        </a></li>`, "")
     });
-    return gallery.append(...image);
+    return gallery.insertAdjacentHTML('beforeend',li);
 }
 
 createImg(galleryItems);
@@ -32,10 +28,12 @@ function onClick(e) {
         lightbox.classList.add("is-open");
         lightboxImg.src = chosenImg.dataset.src;
         lightboxImg.alt = chosenImg.alt;
+        lightbox.addEventListener('click', onClose);
+        gallery.addEventListener('keydown', onKeydown);
     }
 }
 
-lightbox.addEventListener('click', onClose);
+
 
 function onClose(e) {
     if (!e.target.classList.contains('lightbox__image')) {
@@ -43,13 +41,13 @@ function onClose(e) {
     }
 }
 
-gallery.addEventListener('keydown', onKeydown);
 
 function onKeydown(e) {
-    if (lightbox.classList.contains("is-open")) {
         let index = Number(galleryItems.indexOf(galleryItems.find(img => img.original === lightboxImg.src))) - 1;
         if (e.code === "Escape") {
             lightbox.classList.remove("is-open");
+            lightbox.removeEventListener('click', onClose);
+            gallery.removeEventListener('keydown', onKeydown);
         } else if (e.code === "ArrowLeft") { // left
             if (index >= 0) {
                 const findPrevImg = Number(galleryItems.indexOf(galleryItems.find(img => img.original === lightboxImg.src))) - 1;
@@ -66,5 +64,5 @@ function onKeydown(e) {
                 lightboxImg.src = galleryItems[0].original
             }
         }
-    }
+    
 }
